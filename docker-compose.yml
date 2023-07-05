@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    image: ghcr.io/sretfihs/shift/oidc-demo:main
+    environment:
+      VOUCH_PROXY_FQDN: "vouch-proxy"
+    ports:
+      - 8080:80
+
+  vouch-proxy:
+    image: ghcr.io/sretfihs/shift/oidc-demo-vouch:main
+    command: sleep infinity
+    restart: always
+    environment:
+      OAUTH_CALLBACK_URL: http://localhost:8080/user/callback
+      VOUCH_COOKIE_DOMAIN: localhost
+      VOUCH_ALLOWALLUSERS: "true"
+    env_file:
+      - .env
+
+    ports:
+      - 9090:9090
